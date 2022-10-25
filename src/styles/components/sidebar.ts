@@ -11,29 +11,7 @@ export const AsideBarContainer = styled('aside', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  minWidth: '30rem',
-
-  h2: {
-    marginBottom: '2rem',
-    fontSize: '$lg',
-    color: '$gray100',
-  },
-
-  button: {
-    padding: '1.25rem 2.5rem',
-    background: '$green500',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    fontSize: '$md',
-    color: '$white',
-    cursor: 'pointer',
-    border: '0',
-
-    '&:hover': {
-      background: '$green300',
-      transition: '0.2s all',
-    },
-  },
+  minWidth: '95vw',
 
   transform: 'translateX(110%)',
   opacity: '0',
@@ -42,6 +20,16 @@ export const AsideBarContainer = styled('aside', {
   '&.visible': {
     transform: 'translateX(0%)',
     opacity: 1,
+  },
+
+  h2: {
+    marginBottom: '2rem',
+    fontSize: '$lg',
+    color: '$gray100',
+  },
+
+  '@md': {
+    minWidth: '30rem',
   },
 })
 
@@ -53,8 +41,20 @@ export const CartItensContainer = styled('section', {
   gap: '1.5rem',
 })
 
+export const EmptyCartItem = styled('div', {
+  display: 'flex',
+  flex: '1',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  span: {
+    color: '$gray300',
+  },
+})
+
 export const CartItem = styled('div', {
   display: 'flex',
+  alignItems: 'center',
   gap: '1.25rem',
 })
 
@@ -71,6 +71,7 @@ export const CartItemImageContainer = styled('div', {
 export const CartItemDetailsContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
+  flex: '1',
 
   h3: {
     fontWeight: 'normal',
@@ -87,6 +88,7 @@ export const CartItemDetailsContainer = styled('div', {
     color: '$green500',
     fontWeight: 'bold',
     textDecoration: 'none',
+    cursor: 'pointer',
 
     '&:hover': {
       color: '$green300',
@@ -130,4 +132,25 @@ export const CloseButton = styled('span', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+})
+
+export const CheckoutButton = styled('button', {
+  padding: '1.25rem 2.5rem',
+  background: '$green500',
+  borderRadius: '8px',
+  fontWeight: 'bold',
+  fontSize: '$md',
+  color: '$white',
+  cursor: 'pointer',
+  border: '0',
+
+  '&:not(:disabled):hover': {
+    backgroundColor: '$green300',
+    transition: '0.2s all',
+  },
+
+  '&:disabled': {
+    opacity: '0.6',
+    cursor: 'not-allowed',
+  },
 })

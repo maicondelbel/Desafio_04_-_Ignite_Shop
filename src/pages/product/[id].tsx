@@ -1,7 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { stripe } from './../../lib/stripe'
 import { Stripe } from 'stripe'
-import axios from 'axios'
 
 import {
   ProductContainer,
@@ -10,48 +9,28 @@ import {
 } from '../../styles/pages/product'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useContext } from 'react'
 import Head from 'next/head'
+import { CartContext, IProduct } from '../../contexts/cartContext'
+import Loader from '../../components/Loader'
 
 interface IProductProps {
-  product: {
-    id: string
-    name: string
-    imageUrl: string
-    defaultPriceId: string
-    price: string
-    description: string
-  }
+  product: IProduct
 }
 
 export default function Product({ product }: IProductProps) {
   const { isFallback } = useRouter()
 
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false)
+  const { itemAlreadyExistsInCart, addToCart } = useContext(CartContext)
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true)
-
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
-      })
-
-      const { checkoutUrl } = response.data
-
-      window.location.href = checkoutUrl
-    } catch (error) {
-      console.log(error)
-      setIsCreatingCheckoutSession(false)
-
-      alert('Falha ao redirecionar ao checkout')
-    }
+  function handleAddToCart(product: IProduct) {
+    addToCart(product)
   }
 
   if (isFallback) {
-    return <p>Carregando...</p>
+    return <Loader />
   }
+
   return (
     <>
       <Head>
@@ -67,10 +46,12 @@ export default function Product({ product }: IProductProps) {
           <span>{product.price}</span>
           <p>{product.description}</p>
           <button
-            onClick={handleBuyProduct}
-            disabled={isCreatingCheckoutSession}
+            onClick={() => handleAddToCart(product)}
+            disabled={itemAlreadyExistsInCart(product.id)}
           >
-            Compar agora
+            {itemAlreadyExistsInCart(product.id)
+              ? 'Produto adicionado'
+              : 'Colocar na sacola'}
           </button>
         </ProductDetailContainer>
       </ProductContainer>
@@ -114,8 +95,9 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
           currency: 'BRL',
         }).format(price.unit_amount / 100),
         description: product.description,
+        priceUnformatted: price.unit_amount / 100,
       },
-      revalidate: 60 * 60 * 1, // 1 Hours,
+      revalidate: 60 * 60 * 1, // 1 Hour,
     },
   }
 }

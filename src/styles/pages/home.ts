@@ -1,14 +1,12 @@
 import { styled } from '..'
 
 export const HomeContainer = styled('main', {
-  flex: 1,
   display: 'flex',
   alignItems: 'center',
   width: '100%',
-  maxWidth: 'calc(100vw - ((100vw - 1220px) / 2))',
   marginLeft: 'auto',
   position: 'relative',
-  minHeight: '656px',
+  minHeight: '520px',
 
   '.swiper-button-prev': {
     color: '$gray300',
@@ -18,7 +16,7 @@ export const HomeContainer = styled('main', {
     top: 0,
     margin: 0,
     paddingLeft: '1rem',
-    width: '8.5rem',
+    width: '3.5rem',
     left: 0,
     justifyContent: 'flex-start',
   },
@@ -31,8 +29,14 @@ export const HomeContainer = styled('main', {
     top: 0,
     margin: 0,
     paddingRight: '1rem',
-    width: '8.5rem',
+    width: '3.5rem',
     right: 0,
     justifyContent: 'flex-end',
+  },
+
+  '@md': {
+    '.swiper-button-next, .swiper-button-prev': {
+      width: '8.5rem',
+    },
   },
 })

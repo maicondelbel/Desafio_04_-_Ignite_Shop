@@ -8,17 +8,18 @@ import { stripe } from './../lib/stripe'
 import {
   SuccessContainer,
   SuccessImageContainer,
+  SuccessImagesContainer,
 } from './../styles/pages/success'
 
 interface ISuccessProps {
   customerName: string
-  product: {
-    name: string
-    imageUrl: string
-  }
+  productsImage: string[]
 }
 
-export default function Success({ customerName, product }: ISuccessProps) {
+export default function Success({
+  customerName,
+  productsImage,
+}: ISuccessProps) {
   return (
     <>
       <Head>
@@ -27,13 +28,21 @@ export default function Success({ customerName, product }: ISuccessProps) {
       </Head>
 
       <SuccessContainer>
+        <SuccessImagesContainer>
+          {productsImage.map((productImage, index) => {
+            return (
+              <SuccessImageContainer key={index}>
+                <Image src={productImage} alt="" width={140} height={140} />
+              </SuccessImageContainer>
+            )
+          })}
+        </SuccessImagesContainer>
         <h1>Compra Efetuada!</h1>
-        <SuccessImageContainer>
-          <Image src={product.imageUrl} alt="" width={140} height={140} />
-        </SuccessImageContainer>
         <p>
-          Uhuul <strong>{customerName}</strong>, sua
-          <strong> {product.name}</strong> já está a caminho da sua casa.
+          Uhuul <strong>{customerName}</strong>, sua compra de
+          <strong> {productsImage.length}</strong>
+          {productsImage.length > 1 ? ' camisetas' : ' camiseta'} já está a
+          caminho da sua casa.
         </p>
         <Link href={'/'}>Voltar para catálogo</Link>
       </SuccessContainer>
@@ -59,15 +68,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     })
 
     const customerName = response.customer_details.name
-    const product = response.line_items.data[0].price.product as Stripe.Product
+    const productsImage = response.line_items.data.map((item) => {
+      const product = item.price.product as Stripe.Product
+      return product.images[0]
+    })
 
     return {
       props: {
         customerName,
-        product: {
-          name: product.name,
-          imageUrl: product.images[0],
-        },
+        productsImage,
       },
     }
   } catch (error) {

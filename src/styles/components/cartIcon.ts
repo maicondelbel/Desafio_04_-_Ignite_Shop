@@ -9,6 +9,7 @@ export const CartIconContainer = styled('div', {
   borderRadius: '8px',
   position: 'relative',
   cursor: 'pointer',
+  marginLeft: 'auto',
 
   svg: {
     color: '$gray300',

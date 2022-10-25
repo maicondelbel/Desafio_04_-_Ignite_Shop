@@ -12,15 +12,10 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 
 import { Navigation } from 'swiper'
+import { IProduct } from '../contexts/cartContext'
 
 interface IHomeProps {
-  products: {
-    id: string
-    name: string
-    imageUrl: string
-    price: string
-    priceUnformatted: number
-  }[]
+  products: IProduct[]
 }
 
 export default function Home({ products }: IHomeProps) {
@@ -81,6 +76,7 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
+      defaultPriceId: price.id,
       price: new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL',

@@ -6,10 +6,14 @@ import CartIcon from './CartIcon'
 import { useContext } from 'react'
 import { SidebarContext } from '../contexts/sidebarContext'
 import { CartContext } from '../contexts/cartContext'
+import { useRouter } from 'next/router'
 
 export default function Header() {
   const { toggleSidebar } = useContext(SidebarContext)
   const { cartContentsCount } = useContext(CartContext)
+  const { pathname } = useRouter()
+
+  const hideCartIcon = pathname === '/success'
 
   return (
     <HeaderContainer>
@@ -18,7 +22,12 @@ export default function Header() {
           <Image src={Logo} alt="" />
         </a>
       </Link>
-      <CartIcon quantity={cartContentsCount} onClick={() => toggleSidebar()} />
+      {!hideCartIcon && (
+        <CartIcon
+          quantity={cartContentsCount}
+          onClick={() => toggleSidebar()}
+        />
+      )}
     </HeaderContainer>
   )
 }

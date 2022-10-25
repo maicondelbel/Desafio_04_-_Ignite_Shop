@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 
-interface IProduct {
+export interface IProduct {
   id: string
   name: string
   imageUrl: string
@@ -13,8 +13,10 @@ interface IProduct {
 interface ICartContextType {
   cart: IProduct[]
   cartContentsCount: number
-  cartTotalAmount: number
+  cartTotalAmountFormatted: string
   addToCart: (product: IProduct) => void
+  removeItemFromCart: (productId: string) => void
+  itemAlreadyExistsInCart: (productId: string) => boolean
 }
 
 interface ICartContextProps {
@@ -24,11 +26,28 @@ interface ICartContextProps {
 export const CartContext = createContext({} as ICartContextType)
 
 export function CartProvider({ children }: ICartContextProps) {
-  const [cart, setCart] = useState<IProduct[]>([])
+  const initialCart = []
+  const [cart, setCart] = useState<IProduct[]>(initialCart)
+
+  useEffect(() => {
+    const storedStateAsJSON = JSON.parse(
+      localStorage.getItem('@ignite-shop:cart-1.0.0'),
+    )
+    if (storedStateAsJSON) {
+      setCart(storedStateAsJSON)
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log(cart)
+    if (cart !== initialCart) {
+      const stateJSON = JSON.stringify(cart)
+      localStorage.setItem('@ignite-shop:cart-1.0.0', stateJSON)
+    }
+  }, [cart])
 
   function addToCart(product: IProduct) {
     setCart((state) => [...state, product])
-    console.log(cart)
   }
 
   const cartContentsCount = cart.length
@@ -37,9 +56,33 @@ export function CartProvider({ children }: ICartContextProps) {
     return (total += priceItem.priceUnformatted)
   }, 0)
 
+  const cartTotalAmountFormatted = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(cartTotalAmount)
+
+  function removeItemFromCart(productId: string) {
+    setCart((state) => {
+      return state.filter((cartItem) => {
+        return cartItem.id !== productId
+      })
+    })
+  }
+
+  function itemAlreadyExistsInCart(productId: string) {
+    return cart.some((product) => product.id === productId)
+  }
+
   return (
     <CartContext.Provider
-      value={{ cart, cartContentsCount, cartTotalAmount, addToCart }}
+      value={{
+        cart,
+        cartContentsCount,
+        cartTotalAmountFormatted,
+        addToCart,
+        removeItemFromCart,
+        itemAlreadyExistsInCart,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -5,7 +5,7 @@ export const ProductContainer = styled('main', {
   alignItems: 'center',
   width: '100%',
   maxWidth: '1220px',
-  margin: 'auto',
+  margin: '0 auto',
   minHeight: '656px',
   flexWrap: 'wrap',
   padding: '0 1.25rem',
@@ -23,22 +23,21 @@ export const ProductImageContainer = styled('div', {
 })
 
 export const ProductDetailContainer = styled('div', {
-  flex: '1 1 50%',
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'stretch',
-  padding: '1.5rem 4.5rem 0',
+  padding: '1.5rem 0',
 
   h1: {
-    fontSize: '$2xl',
+    fontSize: '$xl',
     marginBottom: '1rem',
     lineHeight: '1.4',
   },
 
   span: {
+    fontSize: '$xl',
     marginBottom: '2.5rem',
     color: '$green500',
-    fontSize: '$2xl',
   },
 
   p: {
@@ -66,5 +65,25 @@ export const ProductDetailContainer = styled('div', {
       backgroundColor: '$green300',
       transition: '0.2s all',
     },
+  },
+
+  '@sm': {
+    flex: '1 1 100%',
+    h1: {
+      fontSize: '$2xl',
+    },
+
+    span: {
+      fontSize: '$2xl',
+    },
+  },
+
+  '@md': {
+    flex: '1 1 50%',
+    padding: '1.5rem 2.5rem 0',
+  },
+
+  '@lg': {
+    padding: '1.5rem 4.5rem 0',
   },
 })
