@@ -39,7 +39,6 @@ export function CartProvider({ children }: ICartContextProps) {
   }, [])
 
   useEffect(() => {
-    console.log(cart)
     if (cart !== initialCart) {
       const stateJSON = JSON.stringify(cart)
       localStorage.setItem('@ignite-shop:cart-1.0.0', stateJSON)
