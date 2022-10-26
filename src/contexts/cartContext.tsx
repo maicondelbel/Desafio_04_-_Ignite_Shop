@@ -17,6 +17,7 @@ interface ICartContextType {
   addToCart: (product: IProduct) => void
   removeItemFromCart: (productId: string) => void
   itemAlreadyExistsInCart: (productId: string) => boolean
+  clearCart: () => void
 }
 
 interface ICartContextProps {
@@ -26,8 +27,8 @@ interface ICartContextProps {
 export const CartContext = createContext({} as ICartContextType)
 
 export function CartProvider({ children }: ICartContextProps) {
-  const initialCart = []
-  const [cart, setCart] = useState<IProduct[]>(initialCart)
+  const initialState = []
+  const [cart, setCart] = useState<IProduct[]>(initialState)
 
   useEffect(() => {
     const storedStateAsJSON = JSON.parse(
@@ -39,7 +40,7 @@ export function CartProvider({ children }: ICartContextProps) {
   }, [])
 
   useEffect(() => {
-    if (cart !== initialCart) {
+    if (cart !== initialState) {
       const stateJSON = JSON.stringify(cart)
       localStorage.setItem('@ignite-shop:cart-1.0.0', stateJSON)
     }
@@ -72,6 +73,11 @@ export function CartProvider({ children }: ICartContextProps) {
     return cart.some((product) => product.id === productId)
   }
 
+  function clearCart() {
+    setCart(initialState)
+    localStorage.removeItem('@ignite-shop:cart-1.0.0')
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -81,6 +87,7 @@ export function CartProvider({ children }: ICartContextProps) {
         addToCart,
         removeItemFromCart,
         itemAlreadyExistsInCart,
+        clearCart,
       }}
     >
       {children}

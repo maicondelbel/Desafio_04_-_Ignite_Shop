@@ -2,7 +2,9 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useContext, useEffect } from 'react'
 import Stripe from 'stripe'
+import { CartContext } from '../contexts/cartContext'
 import { stripe } from './../lib/stripe'
 
 import {
@@ -14,12 +16,20 @@ import {
 interface ISuccessProps {
   customerName: string
   productsImage: string[]
+  success: boolean
 }
 
 export default function Success({
   customerName,
   productsImage,
+  success,
 }: ISuccessProps) {
+  const { clearCart } = useContext(CartContext)
+
+  useEffect(() => {
+    clearCart()
+  }, [])
+
   return (
     <>
       <Head>
@@ -77,6 +87,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       props: {
         customerName,
         productsImage,
+        success: true,
       },
     }
   } catch (error) {
