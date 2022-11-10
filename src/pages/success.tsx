@@ -33,7 +33,7 @@ export default function Success({
   return (
     <>
       <Head>
-        <title>Ignite Shop | Compra Efetuada!</title>
+        <title>Ignite | Ignite Shop - Compra Efetuada!</title>
         <meta name="robots" content="noindex" />
       </Head>
 

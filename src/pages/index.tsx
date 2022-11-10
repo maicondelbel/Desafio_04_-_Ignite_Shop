@@ -22,7 +22,7 @@ export default function Home({ products }: IHomeProps) {
   return (
     <>
       <Head>
-        <title>Ignite Shop</title>
+        <title>Ignite | Ignite Shop</title>
       </Head>
 
       <HomeContainer>
